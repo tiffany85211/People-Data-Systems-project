@@ -38,12 +38,6 @@ class Agent(object):
 
         which_item_customer_bought = last_sale[0]
 
-        if did_customer_buy_from_me:  # can increase prices
-            self.alpha *= 1.1
-        elif did_customer_buy_from_opponent:  # should decrease prices
-            self.alpha *= 0.9
-        else:  # customer did not buy, should decrease prices even more so the customer buys
-            self.alpha *= 0.8
 
         # print("My current profit: ", my_current_profit)
         # print("Opponent current profit: ", opponent_current_profit)
