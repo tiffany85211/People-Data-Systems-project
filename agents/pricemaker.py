@@ -37,13 +37,18 @@ class Agent(object):
         did_customer_buy_from_opponent = last_sale[1] == self.opponent_number
 
         which_item_customer_bought = last_sale[0]
-        ratio = opponent_last_prices[which_item_customer_bought]/my_last_prices[which_item_customer_bought]
+
+        # TODO - add your code here to potentially update your pricing strategy based on what happened in the last round
+        ratio = 1
+        if not np.isnan(which_item_customer_bought):
+            if not (np.isnan(my_last_prices[which_item_customer_bought]) or np.isnan(opponent_last_prices[which_item_customer_bought])):
+                ratio = opponent_last_prices[which_item_customer_bought] / my_last_prices[which_item_customer_bought]
         if did_customer_buy_from_me:  # can increase prices
-            self.alpha *= max(ratio * 0.95, 1.05)
+            self.alpha *= max(ratio * 0.8, 1.1)
         elif did_customer_buy_from_opponent:  # should decrease prices
-            self.alpha *= max(min(ratio * 0.95, 0.95), 0.5)
+            self.alpha *= max(min(ratio, 0.9), 0.6)
         else:  # customer did not buy, should decrease prices even more so the customer buys
-            self.alpha *= max(min(ratio * 0.8, 0.8), 0.5)
+            self.alpha *= max(min(ratio, 0.8), 0.6)
 
         # print("My current profit: ", my_current_profit)
         # print("Opponent current profit: ", opponent_current_profit)
@@ -54,8 +59,7 @@ class Agent(object):
         #       did_customer_buy_from_opponent)
         # print("Which item customer bought: ", which_item_customer_bought)
 
-        # TODO - add your code here to potentially update your pricing strategy based on what happened in the last round
-        pass
+        
 
     def _get_gradient_direction(self, min0, max0, min1, max1, buyer_vector):
         res_0, res_1, res_revenue = 0, 0, 0
