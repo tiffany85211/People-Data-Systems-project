@@ -45,8 +45,11 @@ class Agent(object):
                 ratio = opponent_last_prices[which_item_customer_bought] / my_last_prices[which_item_customer_bought]
         if did_customer_buy_from_me:  # can increase prices
             self.alpha *= max(ratio * 0.8, 1.1)
-        elif did_customer_buy_from_opponent:  # should decrease prices
-            self.alpha *= max(min(ratio, 0.9), 0.6)
+        elif did_customer_buy_from_opponent:  # should decrease price
+            if ratio < 0.1 and ratio > 0:
+              self.alpha *= 0.1
+            else:
+              self.alpha *= max(min(ratio, 0.9), 0.6)
         else:  # customer did not buy, should decrease prices even more so the customer buys
             self.alpha *= max(min(ratio, 0.8), 0.6)
 
