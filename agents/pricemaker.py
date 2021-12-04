@@ -44,14 +44,11 @@ class Agent(object):
             if not (np.isnan(my_last_prices[which_item_customer_bought]) or np.isnan(opponent_last_prices[which_item_customer_bought])):
                 ratio = opponent_last_prices[which_item_customer_bought] / my_last_prices[which_item_customer_bought]
         if did_customer_buy_from_me:  # can increase prices
-            self.alpha *= max(ratio * 0.8, 1.1)
+            self.alpha = min(max(self.alpha * ratio, self.alpha * 1.2), 1.5)
         elif did_customer_buy_from_opponent:  # should decrease price
-            if ratio < 0.1 and ratio > 0:
-              self.alpha *= 0.1
-            else:
-              self.alpha *= max(min(ratio, 0.9), 0.6)
-        else:  # customer did not buy, should decrease prices even more so the customer buys
-            self.alpha *= max(min(ratio, 0.8), 0.6)
+            self.alpha = max(min(self.alpha * ratio, self.alpha * 0.8), 0.7)
+        else:
+            self.alpha = max(min(self.alpha * ratio, self.alpha * 0.8), 0.7)
 
         # print("My current profit: ", my_current_profit)
         # print("Opponent current profit: ", opponent_current_profit)
